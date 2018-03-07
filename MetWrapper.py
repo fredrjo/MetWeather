@@ -35,4 +35,5 @@ class MetWrapper:
         #   {'sources': mySources , 'elements': myElements, 'referencetime': timeInterval},
             auth=(client_id, '')
         )
-        return r
+
+        return r.json()

@@ -4,3 +4,8 @@ from models.StationModel import StationModel
 class Station(Resource):
     def get(self):
         return StationModel.getStationsFromMet()
+
+
+class StationS(Resource):
+    def get(self):
+        return StationModel.getAllStations(StationModel)
