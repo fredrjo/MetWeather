@@ -17,7 +17,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
-api.add_resource(ImportWeather, '/')
+api.add_resource(ImportWeather, '/weather')
 api.add_resource(Station, '/station')
 api.add_resource(StationS, '/stations')
 api.add_resource(StationOverview, '/info')
