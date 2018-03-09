@@ -9,7 +9,7 @@ class MetWrapper:
         client_id = 'df3e5f22-545a-46d4-aeb3-bfb6b291d3f0'
         url = 'https://frost.met.no/observations/v0.jsonld'
         r = requests.get( url,
-            {'sources': stations , 'elements': myElements, 'referencetime': timeInterval},
+            {'sources': {stations} , 'elements': myElements, 'referencetime': timeInterval},
             auth=(client_id, '')
             )
         return r
@@ -31,7 +31,7 @@ class MetWrapper:
         client_id = 'df3e5f22-545a-46d4-aeb3-bfb6b291d3f0'
         url = 'https://frost.met.no/sources/v0.jsonld?types=SensorSystem&country={0}'.format(country_code)
         # issue an HTTP GET request
-        r = requests.get( url, {'fields' : 'id, name, geometry, masl'},#{'geometry' : 'POLYGON((10 60, 10 65, 11 65, 10 60))'},
+        r = requests.get( url, {'fields' : 'id, name, geometry'},#{'geometry' : 'POLYGON((10 60, 10 65, 11 65, 10 60))'},
         #   {'sources': mySources , 'elements': myElements, 'referencetime': timeInterval},
             auth=(client_id, '')
         )
