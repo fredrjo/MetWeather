@@ -30,5 +30,5 @@ class MeasurementModel(db.Model):
         prepare = MeasurementModel.query.filter_by(station=station)
         #print(len(prepare))
         for item in prepare:
-            stuff.append((item.mtime, item.value))
+            stuff.append(item.value)
         return stuff
