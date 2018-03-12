@@ -7,7 +7,7 @@ from models.StationModel import StationModel
 from models.MeasurementModel import MeasurementModel
 from resources.ImportWeather import ImportWeather
 from resources.CheckForUpdates import CheckForUpdates
-from resources.Station import Station, StationS, StationOverview
+from resources.Station import Station, StationS, StationOverview, StationOptions
 from MetWrapper import MetWrapper
 
 app = Flask(__name__)
@@ -21,6 +21,7 @@ api.add_resource(ImportWeather, '/weather')
 api.add_resource(Station, '/station')
 api.add_resource(StationS, '/stations')
 api.add_resource(StationOverview, '/info')
+api.add_resource(StationOptions, '/options')
 
 api.add_resource(CheckForUpdates, '/check')
 
