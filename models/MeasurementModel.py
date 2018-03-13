@@ -1,11 +1,12 @@
 from db import db
 import json
+from datetime import datetime
 
 class MeasurementModel(db.Model):
     __tablename__ = 'measurements'
     id = db.Column(db.Integer, primary_key = True)
     mType = db.Column(db.String(255))
-    mtime = db.Column(db.String(24))
+    mtime = db.Column(db.DateTime)
     value = db.Column(db.Float(precision = 2))
     station = db.Column(db.String(255), db.ForeignKey("stations.id"))
 
@@ -19,16 +20,23 @@ class MeasurementModel(db.Model):
         for chunk in data:
             for item in chunk['data']:
                 for obs in item['observations']:
-                    mes = MeasurementModel(item['sourceId'], item['referenceTime'], obs['elementId'], obs['value'])
-                    db.session.add(mes)
-
+                    converted = datetime.strptime(item['referenceTime'], '%Y-%m-%dT%H:%M:%S.000Z')
+                    if (MeasurementModel.query.filter_by(station=item['sourceId'][0:-2], mtime=converted, mType=obs['elementId'], value=obs['value']).first()==None):
+                        mes = MeasurementModel(item['sourceId'][0:-2], converted, obs['elementId'], obs['value'])
+                        db.session.add(mes)
         db.session.commit()
 
     def getDataFrom(station):
         stuff = []
-        station = station + ':0'
+        station = station #+ ':0'
         prepare = MeasurementModel.query.filter_by(station=station)
-        #print(len(prepare))
         for item in prepare:
             stuff.append(item.value)
         return stuff
+
+    def getAllDataFromWhere(fromTime, defType = 'air_temperature'):
+        fixThis = []
+        returnThis = MeasurementModel.query.filter(MeasurementModel.mtime >= fromTime).filter(MeasurementModel.mType==defType).all()
+        for mes in returnThis:
+            fixThis.append({'station': mes.station , 'value' : mes.value, 'time': datetime.strftime(mes.mtime, '%Y-%m-%dT%H:%M:%S.000Z')})
+        return fixThis

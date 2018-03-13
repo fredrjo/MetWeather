@@ -5,7 +5,7 @@ from flask_cors import CORS
 
 from models.StationModel import StationModel
 from models.MeasurementModel import MeasurementModel
-from resources.ImportWeather import ImportWeather
+from resources.ImportWeather import ImportWeather, WeatherReport
 from resources.CheckForUpdates import CheckForUpdates
 from resources.Station import Station, StationS, StationOverview, StationOptions
 from MetWrapper import MetWrapper
@@ -18,6 +18,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
 api.add_resource(ImportWeather, '/weather')
+api.add_resource(WeatherReport, '/report')
 api.add_resource(Station, '/station')
 api.add_resource(StationS, '/stations')
 api.add_resource(StationOverview, '/info')
