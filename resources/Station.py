@@ -4,7 +4,7 @@ from models.StationModel import StationModel
 from models.MeasurementModel import MeasurementModel
 from flask import request
 import json
-class Station(Resource):
+class ImportStations(Resource):
     # get all stations from Met and set flag if they have hoourly theseHaveHourTemp
 
     def get(self):
@@ -20,7 +20,7 @@ class Station(Resource):
         StationModel.saveManyStaions(letMeCheck)
         return letMeCheck
 
-class StationS(Resource):
+class AllStation(Resource):
     def get(self):
         return StationModel.getAllStations(StationModel)
 
