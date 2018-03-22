@@ -28,10 +28,11 @@ class MeasurementModel(db.Model):
 
     def getDataFrom(station):
         stuff = []
+
         station = station #+ ':0'
         prepare = MeasurementModel.query.filter_by(station=station)
         for item in prepare:
-            stuff.append(item.value)
+            stuff.append({ 'value' : item.value, 'time' : datetime.strftime(item.mtime , '%Y-%m-%d %H:%M')})
         return stuff
 
     def getAllDataFromWhere(fromTime, defType = 'air_temperature'):
