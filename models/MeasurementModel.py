@@ -21,7 +21,7 @@ class MeasurementModel(db.Model):
             for item in chunk['data']:
                 for obs in item['observations']:
                     converted = datetime.strptime(item['referenceTime'], '%Y-%m-%dT%H:%M:%S.000Z')
-                    if (MeasurementModel.query.filter_by(station=item['sourceId'][0:-2], mtime=converted, mType=obs['elementId'], value=obs['value']).first()==None):
+                    if (MeasurementModel.query.filter_by(station=item['sourceId'][0:-2], mtime=converted, mType=obs['elementId']).first()==None):
                         mes = MeasurementModel(item['sourceId'][0:-2], converted, obs['elementId'], obs['value'])
                         db.session.add(mes)
         db.session.commit()
@@ -30,7 +30,7 @@ class MeasurementModel(db.Model):
         stuff = []
 
         station = station #+ ':0'
-        prepare = MeasurementModel.query.filter_by(station=station)
+        prepare = MeasurementModel.query.filter_by(station=station).order_by(MeasurementModel.mtime.asc())
         for item in prepare:
             stuff.append({ 'value' : item.value, 'time' : datetime.strftime(item.mtime , '%Y-%m-%d %H:%M')})
         return stuff

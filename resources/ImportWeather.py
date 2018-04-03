@@ -19,6 +19,8 @@ class ImportWeather(Resource):
         myElements = ['air_temperature']
         mySources = list2Strings(StationModel.getAllStationsAsString(StationModel), 20)
         fewdaysago = datetime.date.today()- datetime.timedelta(1)
+        if 'days' in request.args:
+            fewdaysago = datetime.date.today()- datetime.timedelta(int(request.args['days']))
         getDataFrom = fewdaysago.strftime("%Y-%m-%d")
         getDataTo = datetime.date.today().strftime("%Y-%m-%d")
         dateString = getDataFrom + '/' + getDataTo
