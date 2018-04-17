@@ -4,14 +4,17 @@ import datetime
 import os.path
 
 def run():
+    surl = "http://fredrik.cebyc.int:5300/stations"
+    res = requests.get(surl)
+    stations = dict(map(lambda item: (item['id'] , item['name']), res.json()))
     url = "http://fredrik.cebyc.int:5300/report?days=1"
     response = requests.get(url)
     data = response.json()
     finaldata = []
+    print(stations)
     for station in data:
-        print(station)
         stationid = station['station'][2:]
-        stationname = 'Nordpolen'
+        stationname = stations[station['station']]
         humandate = station['time']
         finaldata.append(';'.join([stationid, stationname, humandate, str(station['value'])]))
     else:
