@@ -2,12 +2,15 @@ import requests
 import json
 import datetime
 import os.path
+import sys
 
-def run():
+def run(days, daysAgo):
     surl = "http://fredrik.cebyc.int:5300/stations"
+    # surl = "http://localhost:5300/stations"
     res = requests.get(surl)
     stations = dict(map(lambda item: (item['id'] , item['name']), res.json()))
-    url = "http://fredrik.cebyc.int:5300/report?days=1"
+    url = "http://fredrik.cebyc.int:5300/report?days="+days+"&daysAgo="+daysAgo
+    #url = "http://localhost:5300/report?days="+days+"&daysAgo="+daysAgo
     response = requests.get(url)
     data = response.json()
     finaldata = []
@@ -20,7 +23,8 @@ def run():
     else:
         print(station)
 
-    date = datetime.datetime.now().strftime('%Y-%m-%d')
+    useDatedate = datetime.datetime.now() - datetime.timedelta(int(daysAgo))
+    date = useDatedate.strftime('%Y-%m-%d')
     fname = 'data/met' + date + '.txt'
     if not os.path.isfile(fname):
         # create file, add header
@@ -41,4 +45,9 @@ def run():
             addfile.write(line)
 
 if __name__ == '__main__':
-    run()
+    days = "1"
+    daysAgo = "0"
+    if (len(sys.argv)>1):
+        days = sys.argv[1]
+        daysAgo = sys.argv[2]
+    run(days, daysAgo)

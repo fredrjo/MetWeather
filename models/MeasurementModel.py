@@ -35,9 +35,9 @@ class MeasurementModel(db.Model):
             stuff.append({ 'value' : item.value, 'time' : datetime.strftime(item.mtime , '%Y-%m-%d %H:%M')})
         return stuff
 
-    def getAllDataFromWhere(fromTime, defType = 'air_temperature'):
+    def getAllDataFromWhere(fromTime, toTime, defType = 'air_temperature'):
         fixThis = []
-        returnThis = MeasurementModel.query.filter(MeasurementModel.mtime >= fromTime).filter(MeasurementModel.mType==defType).all()
+        returnThis = MeasurementModel.query.filter(MeasurementModel.mtime >= fromTime).filter(MeasurementModel.mtime <= toTime).filter(MeasurementModel.mType==defType).all()
         for mes in returnThis:
             #fixThis.append({'station': mes.station , 'value' : mes.value, 'time': datetime.strftime(mes.mtime, '%Y-%m-%dT%H:%M:%S.000Z')})
             fixThis.append({'station': mes.station , 'value' : mes.value, 'time': datetime.strftime(mes.mtime, '%Y-%m-%d %H:%M')})

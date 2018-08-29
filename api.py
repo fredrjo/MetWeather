@@ -11,14 +11,14 @@ from resources.Station import ImportStations, AllStation, StationOverview, Stati
 from MetWrapper import MetWrapper
 
 app = Flask(__name__)
-api = Api(app)
+
 CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+api = Api(app)
 
-
-api.add_resource(ImportWeather, '/weather') # Collects weather from Met
-api.add_resource(WeatherReport, '/report') #need days (last days)
+api.add_resource(ImportWeather, '/weather') # Collects weather from Met get days and daysAgo
+api.add_resource(WeatherReport, '/report') #need days (last days) might get daysAgo
 api.add_resource(ImportStations, '/importstations')
 api.add_resource(AllStation, '/stations') # Get all relevant stations
 api.add_resource(StationOverview, '/info') # need id
