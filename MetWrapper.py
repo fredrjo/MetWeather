@@ -10,13 +10,14 @@ class MetWrapper:
 
 
     def getObservations(stations, myElements, timeInterval):
-
         url = MetWrapper.baseUrl + 'observations/v0.jsonld'
         r = requests.get( url,
             {'sources': {stations} , 'elements': myElements, 'referencetime': timeInterval},
             #{'elements': myElements, 'timeresolutions' : 'PT1H', 'referencetime': timeInterval},
             auth=(MetWrapper.client_id, '')
             )
+        print (r)
+        print(stations)
         return r
 
     def printObservations(observations):

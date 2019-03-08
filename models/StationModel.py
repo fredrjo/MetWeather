@@ -30,6 +30,7 @@ class StationModel(db.Model):
         getThemBoiz = cls.query.filter_by(hasHourTemp=True)
         for st in getThemBoiz:
             stations.append({'id' : st.id, 'name' : st.name, 'masl': st.masl})
+        print(stations)
         return stations
 
     def getOperational():

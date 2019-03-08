@@ -5,16 +5,16 @@ import os.path
 import sys
 
 def run(days, daysAgo):
-    surl = "http://fredrik.cebyc.int:5300/stations"
+    surl = "http://loke.cebyc.int:5300/stations"
     # surl = "http://localhost:5300/stations"
     res = requests.get(surl)
     stations = dict(map(lambda item: (item['id'] , item['name']), res.json()))
-    url = "http://fredrik.cebyc.int:5300/report?days="+days+"&daysAgo="+daysAgo
+    url = "http://loke.cebyc.int:5300/report?days="+days+"&daysAgo="+daysAgo
     #url = "http://localhost:5300/report?days="+days+"&daysAgo="+daysAgo
     response = requests.get(url)
     data = response.json()
     finaldata = []
-    print(stations)
+    print(data)
     for station in data:
         stationid = station['station'][2:]
         stationname = stations[station['station']]
@@ -38,7 +38,7 @@ def run(days, daysAgo):
         file.write("## Stasjonid, stasjonnavn, timestamp, timestemperatur\n")
         file.write("##\n")
         file.close()
-
+        print(finaldata)
     with open(fname, "a", encoding="utf-8") as addfile:
         for line in finaldata:
             line = line + str('\n')
