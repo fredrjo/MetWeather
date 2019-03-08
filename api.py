@@ -3,19 +3,24 @@ from flask import Flask
 from flask_restful import Resource, Api
 from flask_cors import CORS
 
-from models.StationModel import StationModel
-from models.MeasurementModel import MeasurementModel
+from models.station import Station
+from models.measurement import Measurement
 from resources.ImportWeather import ImportWeather, WeatherReport
 from resources.CheckForUpdates import CheckForUpdates
-from resources.Station import ImportStations, AllStation, StationOverview, StationOptions
+from resources.api_station import ImportStations, AllStation, StationOverview, StationOptions
 from MetWrapper import MetWrapper
 
 app = Flask(__name__)
 
 CORS(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/metweather'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://grabber:rabarbra@localhost/metweather'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 api = Api(app)
+
+@app.before_first_request
+def create_tables():
+    db.create_all()
+
 
 api.add_resource(ImportWeather, '/weather') # Collects weather from Met get days and daysAgo
 api.add_resource(WeatherReport, '/report') #need days (last days) might get daysAgo

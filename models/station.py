@@ -1,20 +1,20 @@
-import sqlite3
 import json
 from db import db
 
 from MetWrapper import MetWrapper
 
-class StationModel(db.Model):
+class Station(db.Model):
     __tablename__ = 'stations'
 
-    id = db.Column(db.String, primary_key = True)
+    id = db.Column(db.Integer, primary_key = True)
+    code = db.Column(db.String(10))
     name = db.Column(db.String(255))
     masl = db.Column(db.String(255)) #meter above sea level
-    hasHourTemp = db.Column(db.Boolean)
+    hasHourTemp = db.Column(db.Boolean())
 
 
-    def __init__(self, id, name, masl, hourly): #, longitude, latitude, masl, operational):
-        self.id = id
+    def __init__(self, code, name, masl, hourly): #, longitude, latitude, masl, operational):
+        self.code = code
         self.name = name
         #self.longitude = longitude
         #self.latitude = latitude
@@ -23,15 +23,18 @@ class StationModel(db.Model):
         #self.operational = operational
 
     def findByName(cls, name):
-        return cls.query.filter_by(id=name).first()
+        return Station.query.filter_by(id=name).first()
 
     def getAllStations(cls):
         stations = []
         getThemBoiz = cls.query.filter_by(hasHourTemp=True)
         for st in getThemBoiz:
-            stations.append({'id' : st.id, 'name' : st.name, 'masl': st.masl})
+            stations.append({'code' : st.id, 'name' : st.name, 'masl': st.masl})
         print(stations)
         return stations
+
+    def getStationIdWithCode(cls, code):
+        return Station.query.filter(Station.code==code).first()
 
     def getOperational():
         operational = []
@@ -45,7 +48,7 @@ class StationModel(db.Model):
         stations = []
         getThemBoiz = cls.query.filter_by(hasHourTemp=True)
         for st in getThemBoiz:
-            stations.append(st.id)
+            stations.append(st.code)
         return stations
 
     def getStationOptions(id):
@@ -67,6 +70,6 @@ class StationModel(db.Model):
     def saveManyStaions(stationList):
         for item in stationList:
             if 'geometry' in item:
-                newStation = StationModel(item['id'], item['name'], ' '.join(str(e) for e in item['geometry']['coordinates']), item['hasHourTemp']);
+                newStation = Station(item['id'], item['name'], ' '.join(str(e) for e in item['geometry']['coordinates']), item['hasHourTemp']);
                 db.session.add(newStation)
         db.session.commit()

@@ -1,8 +1,8 @@
 from flask import Flask
 from flask_restful import Resource, Api
 from MetWrapper import MetWrapper
-from models.StationModel import StationModel
-from models.MeasurementModel import MeasurementModel
+from models.station import Station
+from models.measurement import Measurement
 from flask import request
 import sys
 import datetime
@@ -17,7 +17,7 @@ def list2Strings(listToSplit, chunksize):
 class ImportWeather(Resource):
     def get(self):
         myElements = ['air_temperature']
-        mySources = list2Strings(StationModel.getAllStationsAsString(StationModel), 20)
+        mySources = list2Strings(Station.getAllStationsAsString(Station), 20)
         #mySources = ['SN77230']
         fewdaysago = datetime.date.today()- datetime.timedelta(1)
         fromDate = datetime.date.today()
@@ -36,7 +36,7 @@ class ImportWeather(Resource):
             r = MetWrapper.getObservations(stations, myElements, dateString )
             if r.status_code == 200:
                 allOfIt.append(r.json())
-        MeasurementModel.saveMany(allOfIt)
+        Measurement.saveMany(allOfIt)
 
         return allOfIt
         #else:
@@ -50,4 +50,4 @@ class WeatherReport(Resource):
             fromDate= datetime.date.today()- datetime.timedelta(int(request.args['daysAgo']) + int(request.args['days']))
             toDate = datetime.date.today()- datetime.timedelta(int(request.args['daysAgo']))
 
-        return MeasurementModel.getAllDataFromWhere(fromDate, toDate, 'air_temperature')
+        return Measurement.getAllDataFromWhere(fromDate, toDate, 'air_temperature')

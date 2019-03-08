@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_restful import Resource, Api
-from models.StationModel import StationModel
-from models.MeasurementModel import MeasurementModel
+from models.station import Station
+from models.measurement import Measurement
 from flask import request
 import json
 class ImportStations(Resource):
@@ -9,27 +9,27 @@ class ImportStations(Resource):
 
     def get(self):
         letMeCheck=[]
-        hasHourTemp = StationModel.getOperational()
-        allStations = StationModel.getStationsFromMet()
+        hasHourTemp = Station.getOperational()
+        allStations = Station.getStationsFromMet()
         for st in allStations['data']:
             if st['id'] in hasHourTemp:
                 st['hasHourTemp'] = True
             else:
                 st['hasHourTemp'] = False
             letMeCheck.append(st)
-        StationModel.saveManyStaions(letMeCheck)
+        Station.saveManyStaions(letMeCheck)
         return letMeCheck
 
 class AllStation(Resource):
     def get(self):
-        return StationModel.getAllStations(StationModel)
+        return Station.getAllStations(Station)
 
 class StationOverview(Resource):
     def get(self):
-        hey = MeasurementModel.getDataFrom(request.args['id'])
+        hey = Measurement.getDataFrom(request.args['id'])
         return hey
         #return json.dumps(hey)
 
 class StationOptions(Resource):
     def get(self):
-        return StationModel.getStationOptions(request.args['id'])
+        return Station.getStationOptions(request.args['id'])
