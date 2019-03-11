@@ -9,9 +9,11 @@ import datetime
 
 def list2Strings(listToSplit, chunksize):
     chunks = []
+    print(listToSplit)
     for newChunk in range(0, len(listToSplit), chunksize):
         ele = ','.join(id for id in listToSplit[newChunk:newChunk+20]) #To many stations
         chunks.append(ele)
+    print(chunks)
     return chunks
 
 class ImportWeather(Resource):

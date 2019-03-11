@@ -25,11 +25,14 @@ class Station(db.Model):
     def findByName(cls, name):
         return Station.query.filter_by(id=name).first()
 
+    def findById(cls, id):
+        return Station.query.filter_by(id=id).first()
+
     def getAllStations(cls):
         stations = []
         getThemBoiz = cls.query.filter_by(hasHourTemp=True)
         for st in getThemBoiz:
-            stations.append({'code' : st.id, 'name' : st.name, 'masl': st.masl})
+            stations.append({'id' : st.id, 'code' : st.code, 'name' : st.name, 'masl': st.masl})
         print(stations)
         return stations
 
