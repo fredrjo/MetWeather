@@ -18,7 +18,7 @@ class Measurement(db.Model):
         self.mtime = mtime
         self.mType = mType
         self.value = value
-        self.station = station
+        self.station_id = station
 
     def saveMany(data):
         for chunk in data:
