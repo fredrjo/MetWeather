@@ -34,8 +34,8 @@ class Measurement(db.Model):
         stuff = []
 
         station = station #+ ':0'
-        station_code = Station.findById(station).code
-        prepare = Measurement.query.filter_by(station=station_code).order_by(Measurement.mtime.asc())
+        station_id = Station.findById('Station', station).id
+        prepare = Measurement.query.filter_by(station_id=station_id).order_by(Measurement.mtime.asc())
         for item in prepare:
             stuff.append({ 'value' : item.value, 'time' : datetime.strftime(item.mtime , '%Y-%m-%d %H:%M')})
         return stuff
