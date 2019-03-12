@@ -19,8 +19,8 @@ def list2Strings(listToSplit, chunksize):
 class ImportWeather(Resource):
     def get(self):
         myElements = ['air_temperature']
-        mySources = list2Strings(Station.getAllStationsAsString(Station), 20)
-        #mySources = ['SN77230']
+        #mySources = list2Strings(Station.getAllStationsAsString(Station), 20)
+        mySources = ['SN10380']
         fewdaysago = datetime.date.today()- datetime.timedelta(1)
         fromDate = datetime.date.today()
         if 'days' in request.args:
@@ -39,7 +39,7 @@ class ImportWeather(Resource):
             if r.status_code == 200:
                 allOfIt.append(r.json())
         Measurement.saveMany(allOfIt)
-
+        print(allOfIt)
         return allOfIt
         #else:
         #    sys.stdout.write('error:\n')

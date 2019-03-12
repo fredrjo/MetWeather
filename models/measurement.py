@@ -25,7 +25,7 @@ class Measurement(db.Model):
             for item in chunk['data']:
                 for obs in item['observations']:
                     converted = datetime.strptime(item['referenceTime'], '%Y-%m-%dT%H:%M:%S.000Z')
-                    myId = Station.getStationIdWithCode('Station', item['sourceId'][0:-2]).id
+                    myId = Station.getStationIdWithCode(item['sourceId'][0:-2]).id
                     mes = Measurement(myId, converted, obs['elementId'], obs['value'])
                     db.session.add(mes)
         db.session.commit()
@@ -46,6 +46,6 @@ class Measurement(db.Model):
         for mes in returnThis:
             print(mes)
             #fixThis.append({'station': mes.station , 'value' : mes.value, 'time': datetime.strftime(mes.mtime, '%Y-%m-%dT%H:%M:%S.000Z')})
-            fixThis.append({'station': Station.findById('Station', mes.station_id).code , 'value' : mes.value, 'time': datetime.strftime(mes.mtime, '%Y-%m-%d %H:%M')})
+            fixThis.append({'station': Station.findById('Station', mes.station_id).code , 'value' : mes.value, 'time': datetime.strftime(mes.mtime, '%Y-%m-%d %H:%M:%S.000Z')})
 
         return fixThis

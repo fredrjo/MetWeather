@@ -36,7 +36,8 @@ class Station(db.Model):
         print(stations)
         return stations
 
-    def getStationIdWithCode(cls, code):
+    @staticmethod
+    def getStationIdWithCode(code):
         return Station.query.filter(Station.code==code).first()
 
     def getOperational():
