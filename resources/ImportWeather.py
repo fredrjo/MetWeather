@@ -9,11 +9,9 @@ import datetime
 
 def list2Strings(listToSplit, chunksize):
     chunks = []
-    print(listToSplit)
     for newChunk in range(0, len(listToSplit), chunksize):
         ele = ','.join(id for id in listToSplit[newChunk:newChunk+20]) #To many stations
         chunks.append(ele)
-    print(chunks)
     return chunks
 
 class ImportWeather(Resource):
@@ -32,14 +30,12 @@ class ImportWeather(Resource):
         getDataFrom = fewdaysago.strftime("%Y-%m-%d")
         getDataTo = fromDate.strftime("%Y-%m-%d")
         dateString = getDataFrom + '/' + getDataTo
-        print(dateString)
         allOfIt = []
         for stations in mySources:
             r = MetWrapper.getObservations(stations, myElements, dateString )
             if r.status_code == 200:
                 allOfIt.append(r.json())
         Measurement.saveMany(allOfIt)
-        print(allOfIt)
         return allOfIt
         #else:
         #    sys.stdout.write('error:\n')

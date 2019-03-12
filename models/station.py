@@ -33,7 +33,6 @@ class Station(db.Model):
         getThemBoiz = cls.query.filter_by(hasHourTemp=True)
         for st in getThemBoiz:
             stations.append({'id' : st.id, 'code' : st.code, 'name' : st.name, 'masl': st.masl})
-        print(stations)
         return stations
 
     @staticmethod
@@ -63,14 +62,9 @@ class Station(db.Model):
         stuff = MetWrapper.getStationsFromMet('NO')
         return stuff        #print(stuff)
         for item in stuff['data']:
-            print(item)
             if 'geometry' in item:
                 print(item['geometry'])
-                #newStation = StationModel(item['id'], item['name'], ' '.join(str(e) for e in item['geometry']['coordinates']));
-                #db.session.add(newStation)
-
-        #db.session.commit()
-#        print('ok')
+                
     def saveManyStaions(stationList):
         for item in stationList:
             if 'geometry' in item:

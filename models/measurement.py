@@ -44,7 +44,6 @@ class Measurement(db.Model):
         fixThis = []
         returnThis = Measurement.query.filter(Measurement.mtime >= fromTime).filter(Measurement.mtime <= toTime).filter(Measurement.mType==defType).all()
         for mes in returnThis:
-            print(mes)
             #fixThis.append({'station': mes.station , 'value' : mes.value, 'time': datetime.strftime(mes.mtime, '%Y-%m-%dT%H:%M:%S.000Z')})
             fixThis.append({'station': Station.findById('Station', mes.station_id).code , 'value' : mes.value, 'time': datetime.strftime(mes.mtime, '%Y-%m-%d %H:%M:%S.000Z')})
 
