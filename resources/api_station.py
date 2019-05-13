@@ -9,8 +9,9 @@ class ImportStations(Resource):
 
     def get(self):
         letMeCheck=[]
+        print(request.args['country_code'])
         hasHourTemp = Station.getOperational()
-        allStations = Station.getStationsFromMet()
+        allStations = Station.getStationsFromMet(request.args['country_code'])
         for st in allStations['data']:
             if st['id'] in hasHourTemp:
                 st['hasHourTemp'] = True

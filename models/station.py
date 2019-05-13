@@ -58,8 +58,8 @@ class Station(db.Model):
         stuff = MetWrapper.getOptionsFromMet(id)
         return stuff
 
-    def getStationsFromMet():
-        stuff = MetWrapper.getStationsFromMet('NO')
+    def getStationsFromMet(country_code = 'NO'):
+        stuff = MetWrapper.getStationsFromMet(country_code)
         return stuff        #print(stuff)
         for item in stuff['data']:
             if 'geometry' in item:
