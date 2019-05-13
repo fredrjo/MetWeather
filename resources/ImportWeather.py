@@ -17,8 +17,8 @@ def list2Strings(listToSplit, chunksize):
 class ImportWeather(Resource):
     def get(self):
         myElements = ['air_temperature']
-        mySources = list2Strings(Station.getAllStationsAsString(Station), 20)
-        #mySources = ['SN10380']
+        #mySources = list2Strings(Station.getAllStationsAsString(Station), 20)
+        mySources = ['SN10380']
         fewdaysago = datetime.date.today()- datetime.timedelta(1)
         fromDate = datetime.date.today()
         if 'days' in request.args:
@@ -47,5 +47,7 @@ class WeatherReport(Resource):
         if 'daysAgo' in request.args:
             fromDate= datetime.date.today()- datetime.timedelta(int(request.args['daysAgo']) + int(request.args['days']))
             toDate = datetime.date.today()- datetime.timedelta(int(request.args['daysAgo']))
-
-        return Measurement.getAllDataFromWhere(fromDate, toDate, 'air_temperature')
+        if request.args['spesific_station'] == None:
+            return Measurement.getAllDataFromWhere(fromDate, toDate, 'air_temperature')
+        else:
+            return Measurement.getDataFrom(request.args['spesific_station'])
