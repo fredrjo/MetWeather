@@ -5,17 +5,16 @@ import os.path
 import sys
 
 def run(days, daysAgo, spesific_station):
-    #surl = "http://fredrik.cebyc.int:5300/stations"
-    # surl = "http://localhost:5300/stations"
-    #res = requests.get(surl)
-    #print(res.text)
-    stations = [spesific_station]
-    url = "http://loke.cebyc.int:5300/report?days="+days+"&daysAgo="+daysAgo
+    url = "http://loke.cebyc.int:5300/report?days="+days+"&daysAgo="+daysAgo+"&spesific_station="+spesific_station
     #url = "http://localhost:5300/report?days="+days+"&daysAgo="+daysAgo
+    print('OmegaLOL')
     response = requests.get(url)
     data = response.json()
+    surl = "http://loke.cebyc.int:5300/stations"
+    # surl = "http://localhost:5300/stations"
+    res = requests.get(surl)
+    stations = dict(map(lambda item: (item['code'] , item['name']), res.json()))
     finaldata = []
-    print(stations)
     print(data)
     for station in data:
         station_code = station['station']
@@ -23,12 +22,12 @@ def run(days, daysAgo, spesific_station):
         humandate = station['time']
         finaldata.append(';'.join([station_code[2:],  stationname, humandate, str(station['value'])]))
     else:
-        print(stations)
+        print('Something bad happened')
 
     print(finaldata)
     useDatedate = datetime.datetime.now() - datetime.timedelta(int(daysAgo))
     date = useDatedate.strftime('%Y-%m-%d')
-    fname = 'data/met' + date + '.txt'
+    fname = 'data/met' + date + '.txt.specific'
     if not os.path.isfile(fname):
         # create file, add header
         file = open(fname, 'w+')

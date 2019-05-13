@@ -5,12 +5,12 @@ import os.path
 import sys
 
 def run(days, daysAgo):
-    surl = "http://fredrik.cebyc.int:5300/stations"
+    surl = "http://loke.cebyc.int:5300/stations"
     # surl = "http://localhost:5300/stations"
     res = requests.get(surl)
     print(res.text)
     stations = dict(map(lambda item: (item['code'] , item['name']), res.json()))
-    url = "http://fredrik.cebyc.int:5300/report?days="+days+"&daysAgo="+daysAgo
+    url = "http://loke.cebyc.int:5300/report?days="+days+"&daysAgo="+daysAgo
     #url = "http://localhost:5300/report?days="+days+"&daysAgo="+daysAgo
     response = requests.get(url)
     data = response.json()
@@ -21,7 +21,7 @@ def run(days, daysAgo):
         station_code = station['station']
         stationname = stations[station_code]
         humandate = station['time']
-        finaldata.append(';'.join([station_code,  stationname, humandate, str(station['value'])]))
+        finaldata.append(';'.join([station_code[2:],  stationname, humandate, str(station['value'])]))
     else:
         print(stations)
 

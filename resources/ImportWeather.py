@@ -47,7 +47,8 @@ class WeatherReport(Resource):
         if 'daysAgo' in request.args:
             fromDate= datetime.date.today()- datetime.timedelta(int(request.args['daysAgo']) + int(request.args['days']))
             toDate = datetime.date.today()- datetime.timedelta(int(request.args['daysAgo']))
-        if request.args['spesific_station'] == None:
+        if 'spesific_station' not in request.args:
             return Measurement.getAllDataFromWhere(fromDate, toDate, 'air_temperature')
         else:
+            print(request.args['spesific_station'])
             return Measurement.getDataFrom(request.args['spesific_station'])

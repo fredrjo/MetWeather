@@ -37,7 +37,7 @@ class Measurement(db.Model):
         station_id = Station.findById('Station', station).id
         prepare = Measurement.query.filter_by(station_id=station_id).order_by(Measurement.mtime.asc())
         for item in prepare:
-            stuff.append({ 'value' : item.value, 'time' : datetime.strftime(item.mtime , '%Y-%m-%d %H:%M')})
+            stuff.append({ 'station' : Station.findById('Station', station).code , 'value' : item.value, 'time' : datetime.strftime(item.mtime , '%Y-%m-%d %H:%M')})
         return stuff
 
     def getAllDataFromWhere(fromTime, toTime, defType = 'air_temperature'):
