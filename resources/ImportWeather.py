@@ -17,8 +17,8 @@ def list2Strings(listToSplit, chunksize):
 class ImportWeather(Resource):
     def get(self):
         myElements = ['air_temperature']
-        #mySources = list2Strings(Station.getAllStationsAsString(Station), 20)
-        mySources = ['SN10380']
+        mySources = list2Strings(Station.getAllStationsAsString(Station), 20)
+        #mySources = ['SN10380']
         fewdaysago = datetime.date.today()- datetime.timedelta(1)
         fromDate = datetime.date.today()
         if 'days' in request.args:
