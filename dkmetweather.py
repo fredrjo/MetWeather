@@ -5,12 +5,13 @@ import requests
 import dateutil.parser as dp
 import json
 from bs4 import BeautifulSoup
+import pytz
 
 class Dkmetweather:
 
     url = 'https://wow.metoffice.gov.uk/observations/details/tableview/'
     stationsFile = 'resources/dk_met_stations.json'
-    dateFormat = '%Y-%m-%d %H:%M'
+    dateFormat = '%Y-%m-%d %H:%M:00.000Z'
 
     stations = []
 
@@ -27,7 +28,7 @@ class Dkmetweather:
     def getGetParameters(self, days, daysAgo, weatherType):
         fromDay = datetime.date.today() - datetime.timedelta(days=daysAgo + days)
         toDay = datetime.date.today() - datetime.timedelta(days=daysAgo)
-        return '/details/{}?startAt=0&hours=23:59:59&firstDate={}&lastDate={}&fields={}'.format(
+        return '/details/{}?startAt=0&hours=23:59:59&firstDate={}&lastDate={}&fields={}&timezone=Europe/Oslo'.format(
             fromDay.strftime('%Y-%m-%d'),
             fromDay.strftime('%Y-%m-%d'),
             toDay.strftime('%Y-%m-%d'),
@@ -46,7 +47,11 @@ class Dkmetweather:
         return self.cleanDataFromWow(lol, station)
 
     def rearrangeDate(self, theDate, inFormat):
+        tz1 = pytz.timezone('Europe/Berlin')
+        tz2 = pytz.timezone('UTC')
         temp = datetime.datetime.strptime(theDate, inFormat)
+        temp = tz1.localize(temp)
+        temp = temp.astimezone(tz2)
         return temp.strftime(self.dateFormat)
 
     def cleanDataFromWow(self, jsondata, station):
@@ -66,4 +71,3 @@ class Dkmetweather:
             dataFromAllStations.append(self.fetchData(station, days, daysAgo, weatherType ))
 
         return dataFromAllStations
-
