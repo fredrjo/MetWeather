@@ -5,6 +5,7 @@ import requests
 import dateutil.parser as dp
 import json
 from bs4 import BeautifulSoup
+import pytz
 
 class Dkmetweather:
 
@@ -24,18 +25,19 @@ class Dkmetweather:
         for station in data['stations']:
             self.stations.append(station)
 
-    def getGetParameters(self, days, daysAgo, weatherType):
+    def getGetParameters(self, days, daysAgo, weatherType, startAt):
         fromDay = datetime.date.today() - datetime.timedelta(days=daysAgo + days)
         toDay = datetime.date.today() - datetime.timedelta(days=daysAgo)
-        return '/details/{}?startAt=0&hours=23:59:59&firstDate={}&lastDate={}&fields={}'.format(
+        return '/details/{}?startAt={}&hours=23:59:59&firstDate={}&lastDate={}&fields={}&timezone=Europe/Oslo'.format(
             fromDay.strftime('%Y-%m-%d'),
+            str(startAt),
             fromDay.strftime('%Y-%m-%d'),
             toDay.strftime('%Y-%m-%d'),
             weatherType
         )
 
-    def fetchData(self, station, days, daysAgo, weatherType):
-        page = requests.get(self.url + station['id'] + self.getGetParameters(days, daysAgo, weatherType))
+    def fetchData(self, station, days, daysAgo, weatherType, startAt):
+        page = requests.get(self.url + station['id'] + self.getGetParameters(days, daysAgo, weatherType, startAt))
         soup = BeautifulSoup(page.text, 'html.parser')
         closer = soup.findAll("tr")
         lol = []
@@ -46,7 +48,11 @@ class Dkmetweather:
         return self.cleanDataFromWow(lol, station)
 
     def rearrangeDate(self, theDate, inFormat):
+        tz1 = pytz.timezone('Europe/Berlin')
+        tz2 = pytz.timezone('UTC')
         temp = datetime.datetime.strptime(theDate, inFormat)
+        temp = tz1.localize(temp)
+        temp = temp.astimezone(tz2)
         return temp.strftime(self.dateFormat)
 
     def cleanDataFromWow(self, jsondata, station):
@@ -63,7 +69,8 @@ class Dkmetweather:
     def fetchDataFromAllStations(self, days=1, daysAgo=0, weatherType = 'DryBulbTemperature_Celsius'):
         dataFromAllStations = []
         for station in self.stations:
-            dataFromAllStations.append(self.fetchData(station, days, daysAgo, weatherType ))
+            for i in range(int(station['pages'])):
+                startAt = i * 100
+                dataFromAllStations.append(self.fetchData(station, days, daysAgo, weatherType, startAt ))
 
         return dataFromAllStations
-
