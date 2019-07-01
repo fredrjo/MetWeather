@@ -10,7 +10,7 @@ class Dkmetweather:
 
     url = 'https://wow.metoffice.gov.uk/observations/details/tableview/'
     stationsFile = 'resources/dk_met_stations.json'
-    dateFormat = '%Y-%m-%d %H:%M'
+    dateFormat = '%Y-%m-%d %H:%M:00.000Z'
 
     stations = []
 
