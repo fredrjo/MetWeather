@@ -76,5 +76,3 @@ class Fmiweather:
             dataFromAllStations.append(self.fetchData(station, days, daysAgo))
         return dataFromAllStations
 
-test = Fmiweather()
-print(test.fetchDataFromAllStations(1, 0))
