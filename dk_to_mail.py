@@ -13,7 +13,7 @@ def run(days, daysAgo):
         for meass in station:
             finaldata.append(';'.join(meass))
 
-    useDatedate = datetime.datetime.now() - datetime.timedelta(int(daysAgo))
+    useDatedate = datetime.datetime.now() - datetime.timedelta(int(days) + int(daysAgo))
     date = useDatedate.strftime('%Y-%m-%d')
     fname = 'data/wow' + date + '.txt'
     if not os.path.isfile(fname):
