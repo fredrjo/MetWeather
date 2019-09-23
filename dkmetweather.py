@@ -40,13 +40,8 @@ class Dkmetweather:
         link = self.url + station['id'] + self.getGetParameters(days, daysAgo, weatherType, startAt)
         lol = []
         page = requests.get(link)
-      
-        closer = json.loads(page.text)#json.dumps('page')
-      
+        closer = json.loads(page.text)
         for item in closer['Observations']:
-            
-            #temp = item.findAll('td')
-          #  if len(temp) > 2:
           if ('dryBulbTemperature_Celsius' in item):
             lol.append({'time' : item['ReportStartDateTime'], 'temperature' : item['dryBulbTemperature_Celsius']})
         return self.cleanDataFromWow(lol, station)
