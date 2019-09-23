@@ -9,7 +9,7 @@ import pytz
 
 class Dkmetweather:
 
-    url = 'https://wow.metoffice.gov.uk/observations/details/tableview/'
+    url = 'https://wow.metoffice.gov.uk/observations/details/tableviewdata/'
     stationsFile = 'resources/dk_met_stations.json'
     dateFormat = '%Y-%m-%d %H:%M:00.000Z'
 
@@ -37,14 +37,18 @@ class Dkmetweather:
         )
 
     def fetchData(self, station, days, daysAgo, weatherType, startAt):
-        page = requests.get(self.url + station['id'] + self.getGetParameters(days, daysAgo, weatherType, startAt))
-        soup = BeautifulSoup(page.text, 'html.parser')
-        closer = soup.findAll("tr")
+        link = self.url + station['id'] + self.getGetParameters(days, daysAgo, weatherType, startAt)
         lol = []
-        for item in closer:
-            temp = item.findAll('td')
-            if len(temp) > 2:
-                lol.append({'time' : temp[0].text, 'temperature' : temp[1].text})
+        page = requests.get(link)
+      
+        closer = json.loads(page.text)#json.dumps('page')
+      
+        for item in closer['Observations']:
+            
+            #temp = item.findAll('td')
+          #  if len(temp) > 2:
+          if ('dryBulbTemperature_Celsius' in item):
+            lol.append({'time' : item['ReportStartDateTime'], 'temperature' : item['dryBulbTemperature_Celsius']})
         return self.cleanDataFromWow(lol, station)
 
     def rearrangeDate(self, theDate, inFormat):
@@ -61,7 +65,7 @@ class Dkmetweather:
             cleaned.append([
                 station['id'],
                 station['name'],
-                self.rearrangeDate(str(meassurement['time']), '%d/%m/%Y %H:%M:%S'),
+                self.rearrangeDate(str(meassurement['time']), '%Y-%m-%dT%H:%M:%S'),
                 str(meassurement['temperature']),
             ])
         return cleaned
